@@ -3,6 +3,8 @@ usockets
 
 A universal socket.io wrapper with support for emitAsync (uses Promises and supports async-await syntax) and a request-response system through socket.io-request
 
+Note: As of version 0.0.1, usockets is incomplete and untested. Use at your own risk.
+
 ```
 npm install usockets
 ```
@@ -17,9 +19,10 @@ Request/Response
 
 TODO: 
 ---
-- Documentation
+- Documentation - what APIs to use server side vs client side (point to socket.io docs for standard apis)
+- Write docs on node version support, browser support
 - Testing
-- Automated test/build process for publishing new versions
+- Automated test/build process for publishing new versions - specifically babel & webpack dists (also will probably need older node version dists)
 - Cleanup
 
 LICENSE
