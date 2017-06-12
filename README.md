@@ -15,6 +15,12 @@ emitAsync
 Request/Response
 ---
 
+TODO: 
+---
+- Documentation
+- Testing
+- Automated test/build process for publishing new versions
+- Cleanup
 
 LICENSE
 ---
