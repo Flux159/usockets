@@ -1,6 +1,6 @@
 {
   "name": "usockets",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Universal socket.io wrapper with promise and request/response support",
   "license": "MIT",
   "browser": "./browser.js",

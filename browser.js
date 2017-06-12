@@ -22,10 +22,9 @@ Socket.prototype.emitAsync = function emitAsync(event, payload) {
   });
 };
 
-Socket.prototype.request = (method, data, options = { event: 'socket.io-req', timeout: 60000 }) => {
+Socket.prototype.request = function request(method, data, options = { event: 'socket.io-req', timeout: 60000 }) {
   if (typeof method !== 'string') throw new Error('Method must be a string');
 
-  const self = this;
   let timeout;
 
   const onDisconnect = () => {
@@ -34,9 +33,9 @@ Socket.prototype.request = (method, data, options = { event: 'socket.io-req', ti
   };
 
   return new Promise((resolve, reject) => {
-    self.emit(options.event, { method, data }, (res) => {
+    this.emit(options.event, { method, data }, (res) => {
       clearTimeout(timeout);
-      self.removeListener('disconnect', onDisconnect);
+      this.removeListener('disconnect', onDisconnect);
       if (res.error) {
         return reject(new Error(`Error making request:\n ${res.error.toString()}`));
       }
@@ -45,14 +44,14 @@ Socket.prototype.request = (method, data, options = { event: 'socket.io-req', ti
   });
 
   timeout = setTimeout(() => {
-    self.removeListener('disconnect', onDisconnect);
+    this.removeListener('disconnect', onDisconnect);
     reject(new Error(`Socket request timeout: Exceeded ${options.timeout} msec`));
   }, options.timeout);
 
-  self.once("disconnect", onDisconnect);
+  this.once("disconnect", onDisconnect);
 };
 
-Socket.prototype.response = (method, callback, options = { event: 'socket.io-req' }) => {
+Socket.prototype.response = function response(method, callback, options = { event: 'socket.io-req' }) {
   if (typeof method !== 'string') throw new Error('Method must be a string');
   if (typeof callback !== 'function') throw new Error('Callback must be a function');
 
