@@ -1,0 +1,12 @@
+doc/
+node_modules/
+.DS_Store
+coverage/
+.nyc_output/
+main.js
+*main.js*
+npm-debug.log
+report.html
+
+# Note that I do want /dist folder later (when on github)
+dist
