@@ -47,7 +47,7 @@ Socket.prototype.request = function request(method, data, options) {
       clearTimeout(timeout);
       this.removeListener('disconnect', onDisconnect);
       if (res.error) {
-        return reject(new Error(`Error making request:\n ${res.error.toString()}`));
+        return reject(new Error('Error making request:\n' + res.error.toString()));
       }
       resolve(res.data);
     }.bind(this));
@@ -55,7 +55,7 @@ Socket.prototype.request = function request(method, data, options) {
 
   timeout = setTimeout(function () {
     this.removeListener('disconnect', onDisconnect);
-    reject(new Error(`Socket request timeout: Exceeded ${options.timeout} msec`));
+    reject(new Error('Socket request timeout: Exceeded ' + options.timeout + ' msec'));
   }.bind(this), options.timeout);
 
   this.once("disconnect", onDisconnect);
