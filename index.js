@@ -15,9 +15,9 @@ function replaceErrors(key, value) {
 // Technically modifying exported class prototypes like this is a bad idea...
 Socket.prototype.emitAsync = function emitAsync(event, payload) {
   return new Promise(function (resolve, reject) {
-    return this.emit(event, payload, function (...args) {
-      if (args[0]) return reject(new Error(args[0]));
-      return resolve.apply(null, args);
+    return this.emit(event, payload, function () {
+      if (arguments[0]) return reject(new Error(arguments[0]));
+      return resolve.apply(null, arguments);
     });
   }.bind(this));
 };
