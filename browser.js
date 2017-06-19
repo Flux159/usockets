@@ -35,7 +35,7 @@ Socket.prototype.request = function request(method, data, options) {
 
   if (typeof method !== 'string') throw new Error('Method must be a string');
 
-  let timeout;
+  var timeout;
 
   const onDisconnect = function () {
     clearTimeout(timeout);
