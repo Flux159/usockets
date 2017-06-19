@@ -14,12 +14,12 @@ function replaceErrors(key, value) {
 
 // Technically modifying exported class prototypes like this is a bad idea...
 Socket.prototype.emitAsync = function emitAsync(event, payload) {
-  return new Promise((resolve, reject) => {
-    return this.emit(event, payload, (...args) => {
+  return new Promise(function(resolve, reject) {
+    return this.emit(event, payload, function(...args) {
       if (args[0]) return reject(new Error(args[0]));
       return resolve.apply(null, args);
     });
-  });
+  }.bind(this));
 };
 
 Socket.prototype.request = function request(method, data, options = { event: 'socket.io-req', timeout: 60000 }) {
@@ -27,26 +27,26 @@ Socket.prototype.request = function request(method, data, options = { event: 'so
 
   let timeout;
 
-  const onDisconnect = () => {
+  const onDisconnect = function() {
     clearTimeout(timeout);
     reject(new Error('Socket disconnected'));
   };
 
-  return new Promise((resolve, reject) => {
-    this.emit(options.event, { method, data }, (res) => {
+  return new Promise(function(resolve, reject) {
+    this.emit(options.event, { method, data }, function(res) {
       clearTimeout(timeout);
       this.removeListener('disconnect', onDisconnect);
       if (res.error) {
         return reject(new Error(`Error making request:\n ${res.error.toString()}`));
       }
       resolve(res.data);
-    });
-  });
+    }.bind(this));
+  }.bind(this));
 
-  timeout = setTimeout(() => {
+  timeout = setTimeout(function() {
     this.removeListener('disconnect', onDisconnect);
     reject(new Error(`Socket request timeout: Exceeded ${options.timeout} msec`));
-  }, options.timeout);
+  }.bind(this), options.timeout);
 
   this.once("disconnect", onDisconnect);
 };
@@ -55,16 +55,16 @@ Socket.prototype.response = function response(method, callback, options = { even
   if (typeof method !== 'string') throw new Error('Method must be a string');
   if (typeof callback !== 'function') throw new Error('Callback must be a function');
 
-  this.on(options.event, (req, ack) => {
+  this.on(options.event, function(req, ack) {
     if (req.method !== method) return;
-    const res = (data) => {
+    const res = function(data) {
       ack({ data });
     };
-    res.error = (err) => {
+    res.error = function(err) {
       ack({ error: JSON.stringify(err, replaceErrors)});
     };
     callback(req.data, res);
-  });
+  }.bind(this));
 };
 
 const socketio = require('socket.io-client');
