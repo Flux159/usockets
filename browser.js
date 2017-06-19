@@ -43,7 +43,7 @@ Socket.prototype.request = function request(method, data, options) {
   };
 
   return new Promise(function (resolve, reject) {
-    this.emit(options.event, { method, data }, function (res) {
+    this.emit(options.event, { method: method, data: data }, function (res) {
       clearTimeout(timeout);
       this.removeListener('disconnect', onDisconnect);
       if (res.error) {
@@ -75,7 +75,7 @@ Socket.prototype.response = function response(method, callback, options) {
   this.on(options.event, function (req, ack) {
     if (req.method !== method) return;
     const res = function (data) {
-      ack({ data });
+      ack({ data: data });
     };
     res.error = function (err) {
       ack({ error: JSON.stringify(err, replaceErrors) });
